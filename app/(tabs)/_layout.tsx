@@ -1,23 +1,22 @@
-// app/_layout.tsx
+import React from "react";
 import { Tabs } from "expo-router";
-import { Home, PlusCircle, BookOpen, BarChart2 } from "lucide-react-native";
+import { Home, PlusCircle, BookOpen, BarChart2, Settings } from "lucide-react-native";
+import { useTheme } from "../../shared/theme-context";
+import { createStyles } from "../../shared/styles";
 
 const TabLayout = () => {
+  const { theme } = useTheme(); // Access current theme
+  const styles = createStyles(theme); // Generate styles dynamically based on theme
+
   return (
     <Tabs
       screenOptions={{
-        tabBarStyle: {
-          backgroundColor: '#ffffff',
-          borderTopColor: '#e2e8f0',
-          height: 60,
-        },
-        tabBarActiveTintColor: '#0077b6',
-        tabBarInactiveTintColor: '#64748b',
-       headerStyle: {
-          backgroundColor: '#0077b6',
-        },
-        headerTitleAlign: 'center',
-        headerTintColor: '#fff',
+        tabBarStyle: styles.tabBar,
+        tabBarActiveTintColor: theme.tabActive,
+        tabBarInactiveTintColor: theme.tabInactive,
+        headerStyle: styles.header,
+        headerTitleAlign: "center",
+        headerTintColor: theme.text, // Fixed theme property for header text
       }}
     >
       <Tabs.Screen
@@ -25,7 +24,7 @@ const TabLayout = () => {
         options={{
           title: "Home",
           tabBarIcon: ({ color, size }) => <Home size={size} color={color} />,
-          headerTitle: "Surf Metric"
+          headerTitle: "Surf Metric",
         }}
       />
       <Tabs.Screen
@@ -33,7 +32,7 @@ const TabLayout = () => {
         options={{
           title: "Log",
           tabBarIcon: ({ color, size }) => <PlusCircle size={size} color={color} />,
-          headerTitle: "Log Session"
+          headerTitle: "Log Session",
         }}
       />
       <Tabs.Screen
@@ -41,7 +40,7 @@ const TabLayout = () => {
         options={{
           title: "Sessions",
           tabBarIcon: ({ color, size }) => <BookOpen size={size} color={color} />,
-          headerTitle: "Your Sessions"
+          headerTitle: "Your Sessions",
         }}
       />
       <Tabs.Screen
@@ -49,11 +48,19 @@ const TabLayout = () => {
         options={{
           title: "Insights",
           tabBarIcon: ({ color, size }) => <BarChart2 size={size} color={color} />,
-          headerTitle: "Surf Insights"
+          headerTitle: "Surf Insights",
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: "Settings",
+          tabBarIcon: ({ color, size }) => <Settings size={size} color={color} />,
+          headerTitle: "Settings",
         }}
       />
     </Tabs>
   );
-}
+};
 
 export default TabLayout;

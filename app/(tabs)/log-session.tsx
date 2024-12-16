@@ -1,59 +1,47 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  StyleSheet,
-  ScrollView,
-  Alert,
-} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTheme } from "../../shared/theme-context";
+import { createStyles } from "../../shared/styles";
 
 const LogSessionScreen = () => {
-  // session essentials
-  const [date, setDate] = useState('');
-  const [location, setLocation] = useState('');
-  const [duration, setDuration] = useState('');
-  const [notes, setNotes] = useState('');
-  // wave essentials
-  const [waveHeight, setWaveHeight] = useState('');
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
+  const [date, setDate] = useState("");
+  const [location, setLocation] = useState("");
+  const [duration, setDuration] = useState("");
+  const [notes, setNotes] = useState("");
+  const [waveHeight, setWaveHeight] = useState("");
 
   const handleSaveSession = async () => {
     if (!date || !location) {
-      Alert.alert('Error', 'Date and Location are required!');
+      Alert.alert("Error", "Date and Location are required!");
       return;
     }
 
-    const newSession = { 
-      date, 
-      location,
-      duration, 
-      waveHeight, 
-      notes };
+    const newSession = { date, location, duration, waveHeight, notes };
+
     try {
-      const storedSessions = await AsyncStorage.getItem('surfSessions');
+      const storedSessions = await AsyncStorage.getItem("surfSessions");
       const sessions = storedSessions ? JSON.parse(storedSessions) : [];
       sessions.push(newSession);
+      await AsyncStorage.setItem("surfSessions", JSON.stringify(sessions));
 
-      await AsyncStorage.setItem('surfSessions', JSON.stringify(sessions));
-
-      Alert.alert('Success', 'Session saved successfully!');
-      setDate('');
-      setLocation('');
-      setDuration('');
-      setWaveHeight('');
-      setNotes('');
+      Alert.alert("Success", "Session saved successfully!");
+      setDate("");
+      setLocation("");
+      setDuration("");
+      setWaveHeight("");
+      setNotes("");
     } catch (error) {
-      Alert.alert('Error', 'Failed to save the session.');
+      Alert.alert("Error", "Failed to save the session.");
       console.error(error);
     }
   };
 
   return (
-    <ScrollView style={styles.container}>
-
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 20 }}>
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Date</Text>
         <TextInput
@@ -78,9 +66,10 @@ const LogSessionScreen = () => {
         <Text style={styles.label}>Duration (minutes)</Text>
         <TextInput
           style={styles.input}
-          placeholder="Sesssion Duration"
+          placeholder="Session Duration"
           value={duration}
           onChangeText={setDuration}
+          keyboardType="numeric"
         />
       </View>
 
@@ -106,45 +95,14 @@ const LogSessionScreen = () => {
         />
       </View>
 
-      <Button title="Save Session" onPress={handleSaveSession} />
+      <TouchableOpacity 
+        style={styles.button} 
+        onPress={handleSaveSession}
+      >
+        <Text style={styles.buttonText}>Log Session</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#f5f5f5',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-    color: '#0077b6',
-  },
-  inputGroup: {
-    marginBottom: 15,
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 5,
-    color: '#333',
-  },
-  input: {
-    backgroundColor: '#fff',
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    fontSize: 16,
-  },
-  textArea: {
-    height: 100,
-    textAlignVertical: 'top',
-  },
-});
 
 export default LogSessionScreen;

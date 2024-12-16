@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTheme } from '../../shared/theme-context';
+import { createStyles } from '../../shared/styles';
 
 type SurfSession = {
   date: string;
@@ -10,6 +12,8 @@ type SurfSession = {
 };
 
 const InsightsScreen = () => {
+  const { theme } = useTheme(); // Access theme and toggle
+  const styles = createStyles(theme); // Generate styles dynamically based on theme
   const [insights, setInsights] = useState({
     totalSessions: 0,
     averageWaveHeight: 0,
@@ -43,7 +47,7 @@ const InsightsScreen = () => {
       });
       
       const favoriteLocation = Object.entries(locationCounts)
-        .sort(([,a], [,b]) => b - a)[0][0];
+        .sort(([,a], [,b]) => b - a)[0][0] || 'N/A';
 
       // Calculate sessions this month
       const sessionsThisMonth = sessions.filter(session => {
@@ -56,7 +60,7 @@ const InsightsScreen = () => {
         averageWaveHeight: waveHeights.length ? 
           Number((waveHeights.reduce((a, b) => a + b, 0) / waveHeights.length).toFixed(1)) : 0,
         favoriteLocation,
-        maxWaveHeight: Math.max(...waveHeights),
+        maxWaveHeight: waveHeights.length ? Math.max(...waveHeights) : 0,
         sessionsThisMonth
       });
     } catch (error) {
@@ -65,7 +69,7 @@ const InsightsScreen = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 20 }}>
 
       <View style={styles.statsContainer}>
         <View style={styles.statBox}>
@@ -92,70 +96,5 @@ const InsightsScreen = () => {
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#f5f5f5',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#0077b6',
-    textAlign: 'center',
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  statBox: {
-    flex: 1,
-    backgroundColor: '#fff',
-    padding: 16,
-    borderRadius: 8,
-    marginHorizontal: 4,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  statValue: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#0077b6',
-  },
-  statLabel: {
-    fontSize: 12,
-    color: '#666',
-    marginTop: 4,
-  },
-  insightCard: {
-    backgroundColor: '#fff',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 12,
-    color: '#333',
-  },
-  insightText: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 8,
-  }
-});
 
 export default InsightsScreen;

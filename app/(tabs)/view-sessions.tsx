@@ -1,49 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
-import { useTheme } from '../../shared/theme-context';
-import { createStyles } from '../../shared/styles';
-
-type SurfSession = {
-  id: string;
-  date: string;
-  location: string;
-  duration: string;
-  waveHeight: string;
-  notes: string;
-};
+import { useTheme } from "../contexts/themeContext";
+import { useSessionsContext } from '../contexts/sessionsContext';  // Add this
+import { createStyles } from '../../styles';
+import { SurfSession } from '../types/surfSession';  // Import the type instead of defining it
 
 const ViewSessionsScreen = () => {
   const { theme } = useTheme();
   const styles = createStyles(theme);
-  const [sessions, setSessions] = useState<SurfSession[]>([]);
+  const { sessions, clearSessions } = useSessionsContext();  // Use context instead of local state
+
+  // Remove the useState since we're getting sessions from context
 
   useFocusEffect(
     React.useCallback(() => {
-      const fetchSessions = async () => {
-        try {
-          const storedSessions = await AsyncStorage.getItem('surfSessions');
-          const parsedSessions = storedSessions ? JSON.parse(storedSessions) : [];
-          setSessions(parsedSessions);
-        } catch (error) {
-          console.error('Failed to fetch sessions:', error);
-        }
-      };
-
-      fetchSessions();
-    }, [])
+      console.log("📱 View Sessions Screen - Current sessions:", sessions.length);
+    }, [sessions])
   );
-
-  const clearSessions = async () => {
-    try {
-      await AsyncStorage.removeItem('surfSessions');
-      setSessions([]);
-      alert('All sessions cleared!');
-    } catch (error) {
-      console.error('Error clearing sessions:', error);
-    }
-  };
 
   const renderSession = ({ item }: { item: SurfSession }) => (
     <View style={styles.card}>
@@ -51,31 +25,51 @@ const ViewSessionsScreen = () => {
         <Text style={styles.sessionDate}>{item.date}</Text>
         <Text style={styles.sessionLocation}>{item.location}</Text>
       </View>
-
-      <View style={styles.sessionField}>
-        <Text style={styles.label}>Duration:</Text>
-        <Text style={styles.text}>{item.duration} minutes</Text>
-      </View>
-
-      <View style={styles.sessionField}>
-        <Text style={styles.label}>Wave Height:</Text>
-        <Text style={styles.text}>{item.waveHeight} ft</Text>
-      </View>
-
-      {item.notes && (
+  
+      {item.duration && (
         <View style={styles.sessionField}>
-          <Text style={styles.label}>Notes:</Text>
-          <Text style={styles.text}>{item.notes}</Text>
+          <Text style={styles.label}>Duration:</Text>
+          <Text style={styles.text}>{item.duration} minutes</Text>
+        </View>
+      )}
+  
+      {item.waveCount && (
+        <View style={styles.sessionField}>
+          <Text style={styles.label}>Waves Caught:</Text>
+          <Text style={styles.text}>{item.waveCount}</Text>
+        </View>
+      )}
+  
+      {item.waveHeight && (
+        <View style={styles.sessionField}>
+          <Text style={styles.label}>Wave Height:</Text>
+          <Text style={styles.text}>{item.waveHeight} ft</Text>
+        </View>
+      )}
+  
+      {item.sessionRating && (
+        <View style={styles.sessionField}>
+          <Text style={styles.label}>Session Rating:</Text>
+          <Text style={styles.text}>{item.sessionRating}</Text>
         </View>
       )}
     </View>
   );
 
+  const handleClearSessions = async () => {
+    try {
+      await clearSessions();
+      alert('All sessions cleared!');
+    } catch (error) {
+      console.error('Error clearing sessions:', error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
         data={sessions}
-        keyExtractor={(item) => item.id || `${item.date}-${item.location}`}
+        keyExtractor={(item) => `session-${item.id || `${item.date}-${item.location}`}`}
         renderItem={renderSession}
         ListEmptyComponent={
           <View style={styles.card}>
@@ -88,7 +82,7 @@ const ViewSessionsScreen = () => {
 
       <TouchableOpacity 
         style={styles.button} 
-        onPress={clearSessions}
+        onPress={handleClearSessions}
       >
         <Text style={styles.buttonText}>Clear Sessions</Text>
       </TouchableOpacity>

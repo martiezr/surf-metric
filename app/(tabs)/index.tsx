@@ -1,8 +1,8 @@
 import React from 'react';
 import { Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useTheme } from '../../shared/theme-context';
-import { createStyles } from '../../shared/styles';
+import { useTheme } from "../contexts/themeContext";
+import { createStyles } from '../../styles';
 
 const HomeScreen = () => {
   const { theme } = useTheme();
@@ -34,7 +34,7 @@ const HomeScreen = () => {
 
       <TouchableOpacity
         style={styles.card}
-        onPress={() => router.push('/insights')}
+        onPress={() => router.push('../insights/insights')}
       >
         <Text style={styles.cardTitle}>Surf Insights</Text>
         <Text style={styles.cardDescription}>

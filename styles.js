@@ -278,6 +278,49 @@ export const createStyles = (theme) => StyleSheet.create({
   settingsSublabel: {
     fontSize: 14,
     color: theme.secondary,
+  },
+
+  //stat styles
+  scrollContent: {
+    padding: 16,
+    paddingBottom: 20,
+  },
+  
+  statsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  
+  //stat styles
+  statItem: {
+    width: '48%',                // 2 items per row with space between
+    backgroundColor: theme.cardBackground,
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 16,
+    alignItems: 'center',
+  },
+  
+  statValue: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: theme.primary,
+    marginBottom: 4,
+  },
+  
+  statLabel: {
+    fontSize: 14,
+    color: theme.secondary,
+    textAlign: 'center',
+  },
+  
+  insightCard: {
+    backgroundColor: theme.cardBackground,
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 16,
   }
 
 });

@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useTheme } from "../../shared/theme-context";
-import { createStyles } from "../../shared/styles";
+import { useSessionsContext } from '../contexts/sessionsContext';
+import { useTheme } from "../contexts/themeContext";
+import { createStyles } from "../../styles";
 
 const LogSessionScreen = () => {
   const { theme } = useTheme();
   const styles = createStyles(theme);
+  const { addSession } = useSessionsContext();
 
   const [date, setDate] = useState("");
   const [location, setLocation] = useState("");
   const [duration, setDuration] = useState("");
-  const [notes, setNotes] = useState("");
+  const [waveCount, setWaveCount] = useState("");
   const [waveHeight, setWaveHeight] = useState("");
+  const [sessionRating, setSessionRating] = useState("");
 
   const handleSaveSession = async () => {
     if (!date || !location) {
@@ -20,20 +22,25 @@ const LogSessionScreen = () => {
       return;
     }
 
-    const newSession = { date, location, duration, waveHeight, notes };
+    const newSession = {
+      id: Date.now().toString(),
+      date,
+      location,
+      duration,
+      waveCount,
+      waveHeight,
+      sessionRating
+    };
 
     try {
-      const storedSessions = await AsyncStorage.getItem("surfSessions");
-      const sessions = storedSessions ? JSON.parse(storedSessions) : [];
-      sessions.push(newSession);
-      await AsyncStorage.setItem("surfSessions", JSON.stringify(sessions));
-
+      await addSession(newSession);
       Alert.alert("Success", "Session saved successfully!");
       setDate("");
       setLocation("");
       setDuration("");
+      setWaveCount("");
       setWaveHeight("");
-      setNotes("");
+      setSessionRating("");
     } catch (error) {
       Alert.alert("Error", "Failed to save the session.");
       console.error(error);
@@ -41,12 +48,13 @@ const LogSessionScreen = () => {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 20 }}>
+    <ScrollView 
+    style={styles.container} contentContainerStyle={{ paddingBottom: 20 }}>
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Date</Text>
         <TextInput
           style={styles.input}
-          placeholder="YYYY-MM-DD"
+          placeholder="MM-DD-YYYY"
           value={date}
           onChangeText={setDate}
         />
@@ -74,6 +82,17 @@ const LogSessionScreen = () => {
       </View>
 
       <View style={styles.inputGroup}>
+        <Text style={styles.label}>Waves Caught</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Wave Count"
+          value={waveCount}
+          onChangeText={setWaveCount}
+          keyboardType="numeric"
+        />
+      </View>
+
+      <View style={styles.inputGroup}>
         <Text style={styles.label}>Wave Height (ft)</Text>
         <TextInput
           style={styles.input}
@@ -85,13 +104,13 @@ const LogSessionScreen = () => {
       </View>
 
       <View style={styles.inputGroup}>
-        <Text style={styles.label}>Notes</Text>
+        <Text style={styles.label}>Session Rating (1-10)</Text>
         <TextInput
-          style={[styles.input, styles.textArea]}
-          placeholder="Describe your experience..."
-          value={notes}
-          onChangeText={setNotes}
-          multiline
+          style={styles.input}
+          placeholder="Rate your session from 1 to 10."
+          value={sessionRating}
+          onChangeText={setSessionRating}
+          keyboardType="numeric"
         />
       </View>
 

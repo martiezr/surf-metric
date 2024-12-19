@@ -1,8 +1,8 @@
 import React from "react";
 import { Tabs } from "expo-router";
 import { Home, PlusCircle, BookOpen, BarChart2, Settings } from "lucide-react-native";
-import { useTheme } from "../../shared/theme-context";
-import { createStyles } from "../../shared/styles";
+import { useTheme } from "../contexts/themeContext";
+import { createStyles } from "../../styles";
 
 const TabLayout = () => {
   const { theme } = useTheme(); // Access current theme

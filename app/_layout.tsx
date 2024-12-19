@@ -1,15 +1,21 @@
 import { Stack } from "expo-router";
-import { ThemeProvider } from "../shared/theme-context";
+import { ThemeProvider } from "./contexts/themeContext";
+import { SessionsProvider } from "./contexts/sessionsContext";
+import { SettingsProvider } from "./contexts/settingsContext"
 
 
 export default function RootLayout() {
   return (
-    <ThemeProvider>
-      <Stack 
-        screenOptions={{
-          headerShown: false
-        }}
-      />
-    </ThemeProvider>
+    <SettingsProvider>
+      <ThemeProvider>
+        <SessionsProvider>
+          <Stack 
+            screenOptions={{
+              headerShown: false
+            }}
+          />
+        </SessionsProvider>
+      </ThemeProvider>
+    </SettingsProvider>
   );
 }

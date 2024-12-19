@@ -1,31 +1,38 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { themes } from './styles'; // Import themes
+import React, { createContext, useContext, ReactNode } from 'react';
+import { themes } from '../../styles';
+import { useSettings } from './settingsContext';
 
 // Define the type for the context
 interface ThemeContextType {
   darkMode: boolean;
-  toggleDarkMode: () => void;
-  theme: typeof themes.light; // Matches the structure of a theme
+  toggleDarkMode: () => Promise<void>;
+  theme: typeof themes.light;
 }
 
 // Provide a default value with placeholder functions
 const ThemeContext = createContext<ThemeContextType>({
   darkMode: false,
-  toggleDarkMode: () => {
+  toggleDarkMode: async () => {
     throw new Error('toggleDarkMode function not implemented');
   },
   theme: themes.light,
 });
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { settings, updateSetting } = useSettings();
 
-  const toggleDarkMode = () => setDarkMode((prev) => !prev);
+  const toggleDarkMode = async () => {
+    await updateSetting('darkMode', !settings.darkMode);
+  };
 
-  const theme = darkMode ? themes.dark : themes.light;
+  const theme = settings.darkMode ? themes.dark : themes.light;
 
   return (
-    <ThemeContext.Provider value={{ darkMode, toggleDarkMode, theme }}>
+    <ThemeContext.Provider value={{ 
+      darkMode: settings.darkMode, 
+      toggleDarkMode, 
+      theme 
+    }}>
       {children}
     </ThemeContext.Provider>
   );
@@ -38,3 +45,5 @@ export const useTheme = () => {
   }
   return context;
 };
+
+export default ThemeProvider;

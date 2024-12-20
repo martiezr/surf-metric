@@ -163,3 +163,5 @@ import React, {
   };
   
   export type { UserSettings, LoadingState };
+
+  export default SettingsProvider;

@@ -1,25 +1,25 @@
 import React from 'react';
-import { 
-    Text,
-    View
-} from 'react-native';
+import { Text, View } from 'react-native';
 import { useTheme } from '../contexts/themeContext';
+import { useSettings } from '../contexts/settingsContext';
 import { createStyles } from '../../styles';
+import { calculateStats } from '../../utilities/insightsUtil';
+import { SurfSession } from '../types/surfSession';
 
-
-interface Stat {
-    label: string;
-    value: string | number;
+interface SessionStatsProps {
+  sessions: SurfSession[];
 }
 
-interface SessionStatsProps { 
-    stats: Stat[];
-}
+const SessionStats: React.FC<SessionStatsProps> = ({ sessions }) => {
+  const { theme } = useTheme();
+  const { settings } = useSettings();
+  const styles = React.useMemo(() => createStyles(theme), [theme]);
 
-
-const SessionStats: React.FC<SessionStatsProps> = ({ stats }) => {
-  const { theme } = useTheme(); // Access the current theme
-  const styles = React.useMemo(() => createStyles(theme), [theme]); // Generate styles
+  // Calculate stats inside the component
+  const stats = React.useMemo(() => 
+    calculateStats(sessions, settings.unit),
+    [sessions, settings.unit]
+  );
 
   return (
     <View style={styles.container}>
@@ -36,4 +36,4 @@ const SessionStats: React.FC<SessionStatsProps> = ({ stats }) => {
   );
 };
 
-  export default SessionStats;
+export default SessionStats;

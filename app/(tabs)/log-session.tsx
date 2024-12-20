@@ -1,42 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { useSessionsContext } from '../contexts/sessionsContext';
 import { useTheme } from "../contexts/themeContext";
+import { useSettings } from "../contexts/settingsContext";
 import { createStyles } from "../../styles";
+import DatePicker from "../components/datePicker";
+import { format } from 'date-fns';
+import { storeLength } from '../../utilities/unitUtils';
 
 const LogSessionScreen = () => {
   const { theme } = useTheme();
   const styles = createStyles(theme);
   const { addSession } = useSessionsContext();
+  const { settings } = useSettings();
 
-  const [date, setDate] = useState("");
-  const [location, setLocation] = useState("");
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [location, setLocation] = useState("");  // Initialize empty
   const [duration, setDuration] = useState("");
   const [waveCount, setWaveCount] = useState("");
   const [waveHeight, setWaveHeight] = useState("");
   const [sessionRating, setSessionRating] = useState("");
 
+  // Set initial location and update when settings change
+  useEffect(() => {
+    setLocation(settings.defaultLocation || "");
+  }, [settings]);  // Watch the entire settings object
+
   const handleSaveSession = async () => {
-    if (!date || !location) {
+    if (!selectedDate || !location) {
       Alert.alert("Error", "Date and Location are required!");
       return;
     }
 
     const newSession = {
       id: Date.now().toString(),
-      date,
+      date: format(selectedDate, 'MM-dd-yyyy'),
       location,
       duration,
       waveCount,
-      waveHeight,
+      waveHeight: storeLength(waveHeight, settings.unit),
       sessionRating
     };
 
     try {
       await addSession(newSession);
       Alert.alert("Success", "Session saved successfully!");
-      setDate("");
-      setLocation("");
+      setSelectedDate(null);
+      setLocation(settings.defaultLocation || "");
       setDuration("");
       setWaveCount("");
       setWaveHeight("");
@@ -48,17 +58,12 @@ const LogSessionScreen = () => {
   };
 
   return (
-    <ScrollView 
-    style={styles.container} contentContainerStyle={{ paddingBottom: 20 }}>
-      <View style={styles.inputGroup}>
-        <Text style={styles.label}>Date</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="MM-DD-YYYY"
-          value={date}
-          onChangeText={setDate}
-        />
-      </View>
+    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 20 }}>
+      <DatePicker
+        label="Date"
+        value={selectedDate}
+        onChange={setSelectedDate}
+      />
 
       <View style={styles.inputGroup}>
         <Text style={styles.label}>Location</Text>
@@ -93,10 +98,10 @@ const LogSessionScreen = () => {
       </View>
 
       <View style={styles.inputGroup}>
-        <Text style={styles.label}>Wave Height (ft)</Text>
+        <Text style={styles.label}>{`Wave Height (${settings.unit === 'feet' ? 'ft' : 'm'})`}</Text>
         <TextInput
           style={styles.input}
-          placeholder="e.g., 3.5"
+          placeholder={`e.g., 3.5 ${settings.unit === 'feet' ? 'ft' : 'm'}`}
           value={waveHeight}
           onChangeText={setWaveHeight}
           keyboardType="numeric"
@@ -107,10 +112,11 @@ const LogSessionScreen = () => {
         <Text style={styles.label}>Session Rating (1-10)</Text>
         <TextInput
           style={styles.input}
-          placeholder="Rate your session from 1 to 10."
+          placeholder="Rate your session from 1 to 10"
           value={sessionRating}
           onChangeText={setSessionRating}
           keyboardType="numeric"
+          maxLength={2}
         />
       </View>
 

@@ -2,22 +2,35 @@ import React from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useTheme } from "../contexts/themeContext";
-import { useSessionsContext } from '../contexts/sessionsContext';  // Add this
+import { useSettings } from "../contexts/settingsContext";
+import { useSessionsContext } from '../contexts/sessionsContext';
 import { createStyles } from '../../styles';
-import { SurfSession } from '../types/surfSession';  // Import the type instead of defining it
+import { SurfSession } from '../types/surfSession';
+import { convertLength, formatLength } from '../../utilities/unitUtils';
 
 const ViewSessionsScreen = () => {
   const { theme } = useTheme();
   const styles = createStyles(theme);
-  const { sessions, clearSessions } = useSessionsContext();  // Use context instead of local state
-
-  // Remove the useState since we're getting sessions from context
+  const { sessions, clearSessions } = useSessionsContext();
+  const { settings } = useSettings();
 
   useFocusEffect(
     React.useCallback(() => {
       console.log("📱 View Sessions Screen - Current sessions:", sessions.length);
     }, [sessions])
   );
+
+  const formatWaveHeight = (height: string) => {
+    if (!height) return 'Not recorded';
+    const numHeight = parseFloat(height);
+    if (isNaN(numHeight)) return 'Invalid height';
+    
+    // Convert from stored feet to user's preferred unit and format
+    return formatLength(
+      convertLength(numHeight, 'feet', settings.unit),
+      settings.unit
+    );
+  };
 
   const renderSession = ({ item }: { item: SurfSession }) => (
     <View style={styles.card}>
@@ -43,7 +56,7 @@ const ViewSessionsScreen = () => {
       {item.waveHeight && (
         <View style={styles.sessionField}>
           <Text style={styles.label}>Wave Height:</Text>
-          <Text style={styles.text}>{item.waveHeight} ft</Text>
+          <Text style={styles.text}>{formatWaveHeight(item.waveHeight)}</Text>
         </View>
       )}
   

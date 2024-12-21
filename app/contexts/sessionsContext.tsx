@@ -1,5 +1,5 @@
 // src/contexts/sessionsContext.tsx
-import { SurfSession } from '../types/surfSession';
+import { SurfSession } from '../../types/surfSession';
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

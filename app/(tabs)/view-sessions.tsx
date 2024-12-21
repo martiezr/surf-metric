@@ -5,7 +5,7 @@ import { useTheme } from "../contexts/themeContext";
 import { useSettings } from "../contexts/settingsContext";
 import { useSessionsContext } from '../contexts/sessionsContext';
 import { createStyles } from '../../styles';
-import { SurfSession } from '../types/surfSession';
+import { SurfSession } from '../../types/surfSession';
 import { convertLength, formatLength } from '../../utilities/unitUtils';
 
 const ViewSessionsScreen = () => {

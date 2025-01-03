@@ -1,12 +1,13 @@
+// app/(tabs)/_layout.tsx
 import React from "react";
 import { Tabs } from "expo-router";
 import { Home, PlusCircle, BookOpen, BarChart2, Settings } from "lucide-react-native";
 import { useTheme } from "../contexts/themeContext";
 import { createStyles } from "../../styles";
 
-const TabLayout = () => {
-  const { theme } = useTheme(); // Access current theme
-  const styles = createStyles(theme); // Generate styles dynamically based on theme
+export default function TabLayout() {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   return (
     <Tabs
@@ -16,7 +17,7 @@ const TabLayout = () => {
         tabBarInactiveTintColor: theme.tabInactive,
         headerStyle: styles.header,
         headerTitleAlign: "center",
-        headerTintColor: theme.text, // Fixed theme property for header text
+        headerTintColor: theme.text,
       }}
     >
       <Tabs.Screen
@@ -30,17 +31,15 @@ const TabLayout = () => {
       <Tabs.Screen
         name="log-session"
         options={{
-          title: "Log",
+          title: "Log Session",
           tabBarIcon: ({ color, size }) => <PlusCircle size={size} color={color} />,
-          headerTitle: "Log Session",
         }}
       />
       <Tabs.Screen
-        name="view-sessions"
+        name="sessions"
         options={{
           title: "Sessions",
           tabBarIcon: ({ color, size }) => <BookOpen size={size} color={color} />,
-          headerTitle: "Your Sessions",
         }}
       />
       <Tabs.Screen
@@ -48,19 +47,15 @@ const TabLayout = () => {
         options={{
           title: "Insights",
           tabBarIcon: ({ color, size }) => <BarChart2 size={size} color={color} />,
-          headerTitle: "Surf Insights",
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
-          title: "Settings",
+          title: "Settings", 
           tabBarIcon: ({ color, size }) => <Settings size={size} color={color} />,
-          headerTitle: "Settings",
         }}
       />
     </Tabs>
   );
-};
-
-export default TabLayout;
+}

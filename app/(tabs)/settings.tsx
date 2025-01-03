@@ -1,26 +1,24 @@
+// src/screens/SettingsScreen.tsx
 import React from 'react';
-import { 
-  View, 
-  Text, 
-  Switch, 
-  TextInput, 
-  TouchableOpacity, 
-  ScrollView, 
-  ActivityIndicator 
+import {
+  View,
+  Text,
+  Switch,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  ActivityIndicator,
 } from 'react-native';
-import { useTheme } from "../contexts/themeContext";
-import { useSettings } from "../contexts/settingsContext";
+import { useTheme } from '../contexts/themeContext';
+import { useSettings } from '../contexts/settingsContext';
 import { createStyles } from '../../styles';
-import { MapPin, Ruler, Moon, Save } from 'lucide-react-native';
+import { MapPin, Ruler, Moon } from 'lucide-react-native';
 
 const SettingsScreen = () => {
   const { theme, toggleDarkMode, darkMode } = useTheme();
-  const { 
-    settings, 
-    updateSetting, 
-    isLoading 
-  } = useSettings();
+  const { settings, updateSetting, isLoading } = useSettings();
   
+  // Memoize the styles to avoid recalculating on every render
   const styles = React.useMemo(() => createStyles(theme), [theme]);
 
   if (isLoading) {
@@ -46,11 +44,11 @@ const SettingsScreen = () => {
             <Text style={styles.settingsLabel}>Measurement Unit</Text>
             <Text style={styles.settingsSublabel}>Current: {settings.unit}</Text>
           </View>
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={async () => {
               const newUnit = settings.unit === 'feet' ? 'meters' : 'feet';
               await updateSetting('unit', newUnit);
-            }} 
+            }}
             style={styles.toggleButton}
           >
             <Text style={styles.toggleButtonText}>
@@ -92,7 +90,8 @@ const SettingsScreen = () => {
         </View>
       </View>
 
-      {/* Remove save button since context handles auto-saving */}
+      {/* Any additional Settings sections */}
+      {/* ... */}
     </ScrollView>
   );
 };

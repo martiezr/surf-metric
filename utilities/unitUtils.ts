@@ -38,3 +38,11 @@ export const storeLength = (value: string, fromUnit: Unit): string => {
     ? numValue.toString()
     : convertLength(numValue, 'meters', 'feet').toString();
 };
+
+// Format wave height with validation and unit conversion
+export const formatWaveHeight = (height: string, unit: Unit): string => {
+  if (!height) return 'Not recorded';
+  const numHeight = parseFloat(height);
+  if (isNaN(numHeight)) return 'Invalid height';
+  return formatLength(convertLength(numHeight, 'feet', unit), unit);
+};

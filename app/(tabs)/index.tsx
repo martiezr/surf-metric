@@ -1,3 +1,4 @@
+// app/index.tsx
 import React from 'react';
 import { Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -11,7 +12,6 @@ const HomeScreen = () => {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 20 }}>
-
       <TouchableOpacity
         style={styles.card}
         onPress={() => router.push('/log-session')}
@@ -24,7 +24,7 @@ const HomeScreen = () => {
 
       <TouchableOpacity
         style={styles.card}
-        onPress={() => router.push('/view-sessions')}
+        onPress={() => router.push('/sessions/')}
       >
         <Text style={styles.cardTitle}>View Sessions</Text>
         <Text style={styles.cardDescription}>
@@ -34,14 +34,13 @@ const HomeScreen = () => {
 
       <TouchableOpacity
         style={styles.card}
-        onPress={() => router.push('../insights/insights')}
+        onPress={() => router.push('/insights')}
       >
         <Text style={styles.cardTitle}>Surf Insights</Text>
         <Text style={styles.cardDescription}>
           Analyze your surfing trends and get valuable insights.
         </Text>
       </TouchableOpacity>
-      
     </ScrollView>
   );
 };

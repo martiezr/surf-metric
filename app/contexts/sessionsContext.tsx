@@ -1,13 +1,14 @@
-// src/contexts/sessionsContext.tsx
+// app/contexts/sessionsContext.tsx
 import { SurfSession } from '../../types/surfSession';
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 type SessionsContextType = {
   sessions: SurfSession[];
   loadSessions: () => Promise<void>;
   addSession: (session: SurfSession) => Promise<void>;
+  editSession: (id: string, updatedSession: Partial<SurfSession>) => Promise<void>;
+  deleteSession: (id: string) => Promise<void>;
   clearSessions: () => Promise<void>;
 };
 
@@ -29,13 +30,37 @@ export const SessionsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const addSession = useCallback(async (newSession: SurfSession) => {
     try {
       const updatedSessions = [...sessions, newSession];
-      console.log("🔵 Before adding session - Current count:", sessions.length);
-      console.log("🔵 Adding new session:", newSession);
       await AsyncStorage.setItem('surfSessions', JSON.stringify(updatedSessions));
       setSessions(updatedSessions);
-      console.log("🔵 After adding session - New count:", updatedSessions.length);
     } catch (error) {
       console.error('Failed to add session:', error);
+      throw error;
+    }
+  }, [sessions]);
+
+  const editSession = useCallback(async (id: string, updatedSession: Partial<SurfSession>) => {
+    try {
+      const updatedSessions = sessions.map(session => 
+        session.id === id 
+          ? { ...session, ...updatedSession }
+          : session
+      );
+      await AsyncStorage.setItem('surfSessions', JSON.stringify(updatedSessions));
+      setSessions(updatedSessions);
+    } catch (error) {
+      console.error('Failed to edit session:', error);
+      throw error;
+    }
+  }, [sessions]);
+
+  const deleteSession = useCallback(async (id: string) => {
+    try {
+      const updatedSessions = sessions.filter(session => session.id !== id);
+      await AsyncStorage.setItem('surfSessions', JSON.stringify(updatedSessions));
+      setSessions(updatedSessions);
+    } catch (error) {
+      console.error('Failed to delete session:', error);
+      throw error;
     }
   }, [sessions]);
 
@@ -45,6 +70,7 @@ export const SessionsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       setSessions([]);
     } catch (error) {
       console.error('Failed to clear sessions:', error);
+      throw error;
     }
   }, []);
 
@@ -53,7 +79,14 @@ export const SessionsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, []);
 
   return (
-    <SessionsContext.Provider value={{ sessions, loadSessions, addSession, clearSessions }}>
+    <SessionsContext.Provider value={{ 
+      sessions, 
+      loadSessions, 
+      addSession, 
+      editSession, 
+      deleteSession, 
+      clearSessions 
+    }}>
       {children}
     </SessionsContext.Provider>
   );

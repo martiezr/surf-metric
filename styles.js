@@ -1,3 +1,4 @@
+// src/styles/index.ts
 import { StyleSheet } from 'react-native';
 
 const lightTheme = {
@@ -14,6 +15,9 @@ const lightTheme = {
   headerBackground: '#ffffff',
   tabActive: '#0077b6',
   tabInactive: '#666666',
+  error: '#ff4444',
+  success: '#4CAF50',
+  warning: '#ff9800',
 };
 
 const darkTheme = {
@@ -30,41 +34,14 @@ const darkTheme = {
   headerBackground: '#2d2d2d',
   tabActive: '#4dabf5',
   tabInactive: '#888888',
+  error: '#ff4444',
+  success: '#4CAF50',
+  warning: '#ff9800',
 };
 
-export const createStyles = (theme) => StyleSheet.create({
-  // Navigation styles
-  tabBar: {
-    backgroundColor: theme.cardBackground,
-    borderTopColor: theme.borderColor,
-    height: 60,
-  },
-  header: {
-    backgroundColor: theme.headerBackground,
-  },
-
-  // Container styles
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: theme.background,
-  },
-
-  // Common text styles
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: theme.text,
-    marginBottom: 20,
-  },
-  text: {
-    color: theme.text,
-    fontSize: 16,
-  },
-
-  // Card styles
-  card: {
+export const createStyles = (theme) => {
+  // -- BASE (REUSABLE) STYLES --
+  const baseCard = {
     backgroundColor: theme.cardBackground,
     padding: 20,
     borderRadius: 10,
@@ -74,256 +51,247 @@ export const createStyles = (theme) => StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
     marginBottom: 15,
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: theme.text,
-    marginBottom: 8,
-  },
-  cardDescription: {
-    fontSize: 14,
-    color: theme.text,
-  },
+  };
 
-  // Input styles
-  input: {
-    backgroundColor: theme.inputBackground,
-    color: theme.inputText,
-    borderColor: theme.borderColor,
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    fontSize: 16,
-  },
-  inputGroup: {
-    marginBottom: 20,
-  },
-  textArea: {
-    height: 100,
-    textAlignVertical: 'top',
-    paddingVertical: 10,
-  },
-
-  // Button styles
-  button: {
-    backgroundColor: theme.buttonBackground,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
+  const baseButton = {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
     borderRadius: 5,
     alignItems: 'center',
     marginTop: 10,
-  },
-  buttonText: {
-    color: theme.buttonText,
-    fontSize: 16,
-    fontWeight: '500',
-  },
+  };
 
-  // Insights styles
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  statBox: {
-    flex: 1,
-    backgroundColor: theme.cardBackground,
-    padding: 16,
-    borderRadius: 8,
-    marginHorizontal: 4,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  statValue: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: theme.primary,
-  },
-  statLabel: {
-    fontSize: 12,
-    color: theme.secondary,
-    marginTop: 4,
-  },
-  insightCard: {
-    backgroundColor: theme.cardBackground,
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  insightText: {
-    fontSize: 16,
-    color: theme.secondary,
-    marginBottom: 8,
-  },
-  
-  // View Sessions styles
-  sessionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 15,
-  },
-  sessionDate: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: theme.primary,
-  },
-  sessionLocation: {
-    fontSize: 16,
-    color: theme.secondary,
-  },
-  sessionField: {
-    marginBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.borderColor,
-    paddingBottom: 5,
-  },
-
-  // Settings styles
-  sectionBackground: {
-    backgroundColor: theme.cardBackground,
-    borderRadius: 10,
-    padding: 16,
-    marginBottom: 16,
-  },
-  settingsSectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: theme.text,
-    marginBottom: 12,
-  },
-  toggleButton: {
-    backgroundColor: theme.primary,
-    borderRadius: 12,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-  },
-  toggleButtonText: {
-    color: theme.buttonText,
-    fontSize: 14,
-    fontWeight: '500',
-    textAlign: 'center',
-  },
-  textInput: {
+  const baseInput = {
     backgroundColor: theme.inputBackground,
     color: theme.inputText,
     borderColor: theme.borderColor,
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 5,
     padding: 10,
     fontSize: 16,
-    marginTop: 4,
-  },
-  saveButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: theme.primary,
-    borderRadius: 8,
-    padding: 12,
-    marginTop: 16,
-  },
-  saveButtonText: {
-    color: theme.buttonText,
-    fontSize: 16,
-    fontWeight: '600',
-    marginLeft: 8,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: theme.text,
-    marginBottom: 4,
-  },
-  
-  // Settings styles
-  settingsContentContainer: {
-    paddingBottom: 20,
-  },
-  settingsHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  settingsHeaderText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: theme.text,
-    marginLeft: 8,
-  },
-  settingsItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  settingsItemContent: {
-    flex: 1,
-    marginLeft: 12,
-  },
-  settingsLabel: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: theme.text,
-  },
-  settingsSublabel: {
-    fontSize: 14,
-    color: theme.secondary,
-  },
+  };
 
-  //stat styles
-  scrollContent: {
-    padding: 16,
-    paddingBottom: 20,
-  },
-  
-  statsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  
-  //stat styles
-  statItem: {
-    width: '48%',                // 2 items per row with space between
-    backgroundColor: theme.cardBackground,
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 16,
-    alignItems: 'center',
-  },
-  
-  statValue: {
-    fontSize: 24,
+  const baseHeading = {
     fontWeight: 'bold',
-    color: theme.primary,
-    marginBottom: 4,
-  },
-  
-  statLabel: {
-    fontSize: 14,
-    color: theme.secondary,
+    color: theme.text,
+    marginBottom: 20,
     textAlign: 'center',
-  },
-  
-  insightCard: {
-    backgroundColor: theme.cardBackground,
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 16,
-  }
+  };
 
-});
+  return StyleSheet.create({
+    // -- NAVIGATION --
+    tabBar: {
+      backgroundColor: theme.cardBackground,
+      borderTopColor: theme.borderColor,
+      height: 60,
+    },
+    header: {
+      backgroundColor: theme.headerBackground,
+    },
+
+    // -- LAYOUT CONTAINERS --
+    container: {
+      flex: 1,
+      padding: 16,
+      backgroundColor: theme.background,
+    },
+    scrollContent: {
+      paddingBottom: 20,
+    },
+
+    // -- TEXT & HEADINGS --
+    title: {
+      ...baseHeading,
+      fontSize: 24,
+    },
+    cardTitle: {
+      ...baseHeading,
+      fontSize: 18,
+      marginBottom: 8,
+      textAlign: 'left', // left-aligned card titles
+    },
+    text: {
+      color: theme.text,
+      fontSize: 16,
+    },
+
+    // -- CARDS --
+    card: {
+      ...baseCard,
+    },
+    cardDescription: {
+      fontSize: 14,
+      color: theme.text,
+    },
+    insightCard: {
+      ...baseCard,
+      // Optionally override or remove margin if needed:
+      marginBottom: 10,
+    },
+
+    // -- INPUTS / LABELS --
+    input: {
+      ...baseInput,
+    },
+    textInput: {
+      ...baseInput,
+      // Example: a fixed width text input
+      width: 140,
+    },
+    inputGroup: {
+      marginBottom: 20,
+    },
+    label: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: theme.text,
+      marginBottom: 4,
+    },
+
+    // -- BUTTONS --
+    button: {
+      ...baseButton,
+      backgroundColor: theme.buttonBackground,
+    },
+    buttonText: {
+      color: theme.buttonText,
+      fontSize: 16,
+      fontWeight: '500',
+    },
+    deleteButton: {
+      ...baseButton,
+      backgroundColor: theme.error,
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+    },
+    deleteButtonText: {
+      color: theme.buttonText,
+      fontSize: 14,
+      fontWeight: '500',
+    },
+    toggleButton: {
+      ...baseButton,
+      paddingVertical: 6,
+      paddingHorizontal: 12,
+      backgroundColor: theme.buttonBackground,
+    },
+    toggleButtonText: {
+      color: theme.buttonText,
+      fontSize: 14,
+      fontWeight: '500',
+    },
+
+    // -- SESSION / STATS --
+    sessionHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 15,
+    },
+    sessionDate: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: theme.primary,
+    },
+    sessionLocation: {
+      fontSize: 16,
+      color: theme.secondary,
+      marginBottom: 10,
+    },
+    sessionField: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingVertical: 8,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.borderColor,
+    },
+
+    // -- HEADER / ACTIONS --
+    headerButtons: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    headerButton: {
+      marginLeft: 15,
+    },
+
+    // -- EMPTY STATES --
+    emptyState: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 20,
+    },
+    emptyStateText: {
+      color: theme.secondary,
+      fontSize: 16,
+      textAlign: 'center',
+      marginTop: 10,
+    },
+
+    // -- STAT GRID --
+    statsGrid: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'space-between',
+      marginBottom: 20,
+    },
+    statItem: {
+      ...baseCard,
+      width: '48%',
+      alignItems: 'center',
+    },
+    statValue: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      color: theme.primary,
+      marginBottom: 4,
+    },
+    statLabel: {
+      fontSize: 14,
+      color: theme.secondary,
+      textAlign: 'center',
+    },
+
+    // -- SETTINGS SCREEN --
+    settingsContentContainer: {
+      paddingBottom: 20,
+    },
+    sectionBackground: {
+      ...baseCard,
+    },
+    settingsSectionTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: theme.text,
+      marginBottom: 10,
+    },
+    settingsItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 15,
+    },
+    settingsItemContent: {
+      flex: 1,
+      marginLeft: 10,
+    },
+    settingsLabel: {
+      fontSize: 16,
+      fontWeight: '500',
+      color: theme.text,
+    },
+    settingsSublabel: {
+      fontSize: 14,
+      color: theme.secondary,
+    },
+
+    // -- CHARTS --
+    chart: {
+      marginVertical: 8,
+      borderRadius: 16,
+    },
+  });
+};
 
 export const themes = {
   light: lightTheme,

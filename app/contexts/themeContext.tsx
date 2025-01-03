@@ -1,12 +1,15 @@
+// app/contexts/themeContext.tsx
 import React, { createContext, useContext, ReactNode } from 'react';
 import { themes } from '../../styles';
 import { useSettings } from './settingsContext';
+import { ThemeType } from '../../types/themeTypes';
+
 
 // Define the type for the context
 interface ThemeContextType {
   darkMode: boolean;
   toggleDarkMode: () => Promise<void>;
-  theme: typeof themes.light;
+  theme: ThemeType;
 }
 
 // Provide a default value with placeholder functions

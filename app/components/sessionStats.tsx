@@ -1,30 +1,31 @@
+// app/components/sessionStats.tsx
 import React from 'react';
 import { Text, View, ScrollView } from 'react-native';
 import { useTheme } from '../contexts/themeContext';
-import { useSettings } from '../contexts/settingsContext';
 import { createStyles } from '../../styles';
-import { calculateStats, calculateTrends, calculateBestConditions } from '../../utilities/insightsUtil';
 import { SurfSession } from '../../types/surfSession';
 
-interface SessionStatsProps {
-  sessions: SurfSession[];
+interface StatItem {
+  label: string;
+  value: string | number;
 }
 
-const SessionStats: React.FC<SessionStatsProps> = ({ sessions }) => {
+interface SessionStatsProps {
+  stats: StatItem[];        // Computed stats passed from the parent
+  sessions: SurfSession[];  // Raw sessions in case we need them
+}
+
+const SessionStats: React.FC<SessionStatsProps> = ({ stats, sessions }) => {
   const { theme } = useTheme();
-  const { settings } = useSettings();
   const styles = React.useMemo(() => createStyles(theme), [theme]);
 
-  // Calculate all stats
-  const stats = React.useMemo(() => 
-    calculateStats(sessions, settings.unit),
-    [sessions, settings.unit]
-  );
+  // We no longer calculate stats here. We just display what we get.
+  // If you still need local manipulations, you can do them below.
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
       <Text style={styles.title}>Session Stats</Text>
-      
+
       {/* Core Stats Grid */}
       <View style={styles.statsGrid}>
         {stats.slice(0, 8).map((stat, index) => (
